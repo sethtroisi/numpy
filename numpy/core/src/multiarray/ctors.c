@@ -1,4 +1,6 @@
 #define PY_SSIZE_T_CLEAN
+
+#include "stdio.h"
 #include <Python.h>
 #include "structmember.h"
 
@@ -1722,6 +1724,7 @@ PyArray_GetArrayParamsFromObject_int(PyObject *op,
     if (!writeable && PySequence_Check(op)) {
         int check_it, stop_at_string, stop_at_tuple;
         int type_num, type;
+        printf("\nctors.c:PyArray_GetArrayParamsFromObject: sequence\n");
 
         /*
          * Determine the type, using the requested data type if
@@ -1736,6 +1739,9 @@ PyArray_GetArrayParamsFromObject_int(PyObject *op,
                 requested_dtype->type_num == NPY_OBJECT)) {
             Py_INCREF(requested_dtype);
             *out_dtype = requested_dtype;
+            printf("\nctors.c:PyArray_GetArrayParamsFromObject: stringish\n");
+            PyObject_Print((PyObject *)(*out_dtype), stdout, 0);
+            printf("\n");
         }
         else {
             *out_dtype = NULL;
@@ -1752,6 +1758,10 @@ PyArray_GetArrayParamsFromObject_int(PyObject *op,
                     }
                 }
             }
+            printf("\nctors.c:PyArray_GetArrayParamsFromObject: DTypeFromOject: ");
+            PyObject_Print((PyObject *)(*out_dtype), stdout, 0);
+            printf("\n");
+
             if (*out_dtype == NULL) {
                 *out_dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
                 if (*out_dtype == NULL) {
@@ -1851,6 +1861,7 @@ PyArray_GetArrayParamsFromObject_int(PyObject *op,
                 PyArray_DESCR_REPLACE(*out_dtype);
                 (*out_dtype)->elsize = itemsize;
             }
+            printf("\nctors.c:PyArray_GetArrayParamsFromObject: flexsize: %d %d\n", itemsize, string_type);
         }
 
         *out_arr = NULL;
@@ -1933,6 +1944,14 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
         Py_XDECREF(newtype);
         return NULL;
     }
+
+/*
+    printf("\nctors.c:FromAny: ");
+    PyObject_Print((PyObject *)newtype, stdout, 0);
+    printf(" | ");
+    PyObject_Print((PyObject *)dtype, stdout, 0);
+    printf("\n");
+// */
 
     /* If the requested dtype is flexible, adapt it */
     if (newtype != NULL) {
@@ -2116,6 +2135,10 @@ PyArray_CheckFromAny(PyObject *op, PyArray_Descr *descr, int min_depth,
             descr->byteorder = NPY_NATIVE;
         }
     }
+
+    printf("\nctors.c:CheckFromAny: ");
+    PyObject_Print((PyObject *)descr, stdout, 0);
+    printf("\n");
 
     obj = PyArray_FromAny(op, descr, min_depth, max_depth, requires, context);
     if (obj == NULL) {

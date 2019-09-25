@@ -14,6 +14,8 @@
 
 /* $Id: multiarraymodule.c,v 1.36 2005/09/14 00:14:00 teoliphant Exp $ */
 
+#include "stdio.h"
+
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
 #include "structmember.h"
@@ -1666,6 +1668,9 @@ _array_fromobject(PyObject *NPY_UNUSED(ignored), PyObject *args, PyObject *kws)
     }
 
 full_path:
+//    printf("\nmamodule.c:full_path: ");
+//    PyObject_Print((PyObject *)op, stdout, 0);
+//    printf("\n");
     if (!PyArg_ParseTupleAndKeywords(args, kws, "O|O&O&O&O&i:array", kwd,
                 &op,
                 PyArray_DescrConverter2, &type,

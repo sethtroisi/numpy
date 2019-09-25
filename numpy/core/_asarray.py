@@ -80,6 +80,7 @@ def asarray(a, dtype=None, order=None):
     True
 
     """
+    print("_asarray:asarray", a, dtype)
     return array(a, dtype, copy=False, order=order)
 
 
@@ -170,8 +171,8 @@ def ascontiguousarray(a, dtype=None):
     >>> x.flags['C_CONTIGUOUS']
     True
 
-    Note: This function returns an array with at least one-dimension (1-d) 
-    so it will not preserve 0-d arrays.  
+    Note: This function returns an array with at least one-dimension (1-d)
+    so it will not preserve 0-d arrays.
 
     """
     return array(a, dtype, copy=False, order='C', ndmin=1)
@@ -211,8 +212,8 @@ def asfortranarray(a, dtype=None):
     >>> y.flags['F_CONTIGUOUS']
     True
 
-    Note: This function returns an array with at least one-dimension (1-d) 
-    so it will not preserve 0-d arrays.  
+    Note: This function returns an array with at least one-dimension (1-d)
+    so it will not preserve 0-d arrays.
 
     """
     return array(a, dtype, copy=False, order='F', ndmin=1)

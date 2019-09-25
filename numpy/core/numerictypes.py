@@ -497,6 +497,7 @@ ScalarType = tuple(ScalarType)
 for key in allTypes:
     globals()[key] = allTypes[key]
     __all__.append(key)
+    print ("globals: ", key, allTypes[key])
 
 del key
 

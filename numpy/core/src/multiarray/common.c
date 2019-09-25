@@ -106,14 +106,22 @@ PyArray_DTypeFromObject(PyObject *obj, int maxdims, PyArray_Descr **out_dtype)
     int res;
 
     res = PyArray_DTypeFromObjectHelper(obj, maxdims, out_dtype, 0);
+    printf("DTypeFromOject: res: %d | STRING %d | UNICODE %d \n", res, RETRY_WITH_STRING, RETRY_WITH_UNICODE);
     if (res == RETRY_WITH_STRING) {
+        // Bytes get called into this.
         res = PyArray_DTypeFromObjectHelper(obj, maxdims,
                                             out_dtype, NPY_STRING);
+        if (res == 0) {
+            printf("\nctors.c:PyArray_GetArrayParamsFromObject: DTypeFromOject(inner): ");
+            PyObject_Print((PyObject *)(*out_dtype), stdout, 0);
+            printf("\n");
+        }
         if (res == RETRY_WITH_UNICODE) {
             res = PyArray_DTypeFromObjectHelper(obj, maxdims,
                                                 out_dtype, NPY_UNICODE);
         }
     }
+    // Can be simplied by moving inner if and deleting else if.
     else if (res == RETRY_WITH_UNICODE) {
         res = PyArray_DTypeFromObjectHelper(obj, maxdims,
                                             out_dtype, NPY_UNICODE);
@@ -221,6 +229,7 @@ PyArray_DTypeFromObjectHelper(PyObject *obj, int maxdims,
                 return 0;
             }
         }
+        // Here is the problem?
         goto promote_types;
     }
 

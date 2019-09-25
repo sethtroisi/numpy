@@ -280,6 +280,7 @@ def str_len(a):
     # Note: __len__, etc. currently return ints, which are not C-integers.
     # Generally intp would be expected for lengths, although int is sufficient
     # due to the dtype itemsize limitation.
+    print("defchararray: str_len", a, _vec_string(a, integer, '__len__'))
     return _vec_string(a, int_, '__len__')
 
 
@@ -1947,6 +1948,8 @@ class chararray(ndarray):
                 offset=0, strides=None, order='C'):
         global _globalvar
 
+        print ("Chararray new???")
+
         if unicode:
             dtype = unicode_
         else:
@@ -2672,6 +2675,7 @@ def array(obj, itemsize=None, copy=True, unicode=None, order=None):
         be in any order (either C-, Fortran-contiguous, or even
         discontiguous).
     """
+    print("array:array")
     if isinstance(obj, (bytes, str)):
         if unicode is None:
             if isinstance(obj, str):
@@ -2683,10 +2687,13 @@ def array(obj, itemsize=None, copy=True, unicode=None, order=None):
             itemsize = len(obj)
         shape = len(obj) // itemsize
 
+        print("array:isinstance", _len(obj), itemsize)
+
         return chararray(shape, itemsize=itemsize, unicode=unicode,
                          buffer=obj, order=order)
 
     if isinstance(obj, (list, tuple)):
+        print("array:list,tuple")
         obj = numpy.asarray(obj)
 
     if isinstance(obj, ndarray) and issubclass(obj.dtype.type, character):
@@ -2791,5 +2798,6 @@ def asarray(obj, itemsize=None, unicode=None, order=None):
         will be in Fortran-contiguous order (first-index varies the
         fastest).
     """
+    print("array:asarray", obj, itemsize)
     return array(obj, itemsize, copy=False,
                  unicode=unicode, order=order)
