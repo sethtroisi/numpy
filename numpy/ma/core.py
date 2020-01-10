@@ -3891,10 +3891,6 @@ class MaskedArray(ndarray):
     def __str__(self):
         return str(self._insert_masked_print())
 
-    if sys.version_info.major < 3:
-        def __unicode__(self):
-            return unicode(self._insert_masked_print())
-
     def __repr__(self):
         """
         Literal string representation.
